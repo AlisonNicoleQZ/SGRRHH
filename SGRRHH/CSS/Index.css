@@ -1,0 +1,18 @@
+body {
+    background-color: #f4f4f4;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background-color: #0078d4; /* Color similar al de Microsoft */
+    border-color: #0078d4;
+}
+
+.btn-primary:hover {
+    background-color: #005a9e; /* Color más oscuro para hover */
+    border-color: #005a9e;
+}

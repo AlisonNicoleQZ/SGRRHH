@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Departamento {
+  departamentoID  Int        @id @default(autoincrement())
+  nombre          String     @map("NombreDepartamento")
+  empleados       Empleado[]
+}
+
+model Rol {
+  rolID           Int        @id @default(autoincrement())
+  nombre          String     @map("NombreRol")
+  empleados       Empleado[]
+}
+
+model Empleado {
+  empleadoID       Int                   @id @default(autoincrement())
+  nombre           String
+  apellido         String
+  correo           String
+  telefono         String?              
+  fechaContratacion DateTime?
+  departamentoID   Int?
+  rolID            Int?
+  nominas          Nomina[]
+  asistencias      Asistencia[]
+  reclutamientos   Reclutamiento[]
+  evaluaciones     EvaluacionDesempeno[]
+  formaciones      FormacionDesarrollo[]
+
+  departamento     Departamento?         @relation(fields: [departamentoID], references: [departamentoID])
+  rol              Rol?                  @relation(fields: [rolID], references: [rolID])
+}
+
+model Nomina {
+  nominaID         Int                   @id @default(autoincrement())
+  empleadoID       Int
+  salarioBase      Float
+  bonificaciones   Float
+  deducciones      Float
+  fechaPago        DateTime
+  fechaTransaccion DateTime
+  personaEncargadaID Int
+
+  empleado         Empleado              @relation(fields: [empleadoID], references: [empleadoID])
+
+}
+
+model Asistencia {
+  asistenciaID     Int                   @id @default(autoincrement())
+  empleadoID       Int
+  fecha            DateTime
+  horaEntrada      DateTime
+  horaSalida       DateTime
+
+  empleado         Empleado              @relation(fields: [empleadoID], references: [empleadoID])
+}
+
+model Reclutamiento {
+  reclutamientoID  Int                   @id @default(autoincrement())
+  empleadoID       Int
+  fechaPublicacion DateTime
+  fechaContratacion DateTime
+  fechaSalida      DateTime?          
+  estado           String
+
+  empleado         Empleado              @relation(fields: [empleadoID], references: [empleadoID])
+}
+
+model EvaluacionDesempeno {
+  evaluacionID     Int                   @id @default(autoincrement())
+  empleadoID       Int
+  fechaEvaluacion  DateTime
+  calificacion     Float
+  comentarios      String
+
+  empleado         Empleado              @relation(fields: [empleadoID], references: [empleadoID])
+}
+
+model FormacionDesarrollo {
+  formacionID      Int                   @id @default(autoincrement())
+  empleadoID       Int
+  curso            String
+  fechaInicio      DateTime
+  fechaFin         DateTime
+  estado           String
+
+  empleado         Empleado              @relation(fields: [empleadoID], references: [empleadoID])
+}
